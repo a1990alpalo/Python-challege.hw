@@ -1,45 +1,63 @@
-# Python-challege.hw
+# Python Challenge: Financial and Election Analysis
 
-Before starting the assignment, be sure to complete the following steps:
+Two Python command-line programs that analyze CSV datasets and generate summary reports. **PyBank** summarizes monthly financial records, while **PyPoll** counts votes and identifies election winners.
 
-Create a new repository for this project called python-challenge. Do not add this homework assignment to an existing repository.
+Originally completed for the OSU Data Analytics Bootcamp, this project was later refactored to use reusable functions, portable file paths, and consistent terminal and text-file reports.
 
-Clone the new repository to your computer.
+## Technologies
 
-Inside your local Git repository, create a folder for each Python assignment and name them PyBank and PyPoll.
+- Python 3
+- `csv` for reading CSV data
+- `pathlib` for file and directory paths
 
-In each folder that you just created, add the following content:
+Both programs use only the Python standard library. No third-party packages are required.
 
-A new file called main.py. This will be the main script to run for each analysis.
+## Project Files
 
-A Resources folder that contains the CSV files you used. Make sure that your script has the correct path to the CSV file.
+| File | Purpose |
+| --- | --- |
+| `PyBank/main.py` | Financial analysis program |
+| `PyBank/Resources/budget_data.csv` | Monthly financial records |
+| `PyBank/analysis/analysis.txt` | Generated financial report |
+| `PyPoll/main.py` | Election analysis program |
+| `PyPoll/Resources/election_data.csv` | Election records |
+| `PyPoll/analysis/analysis.txt` | Generated election report |
+| `docs/assignment.md` | Original assignment instructions and grading rubric |
 
-An analysis folder that contains your text file that has the results from your analysis.
+## Getting Started
 
-Push these changes to GitHub or GitLab.
+Clone the repository and enter its directory:
 
-Files
-Download the following files to help you get started:
+```bash
+git clone https://github.com/a1990alpalo/Python-challege.hw.git
+cd Python-challege.hw
+```
 
-Module 3 Challenge filesLinks to an external site.
+Run each program from the repository root:
 
-PyBank Instructions
-In this Challenge, you are tasked with creating a Python script to analyze the financial records of your company. You will be given a financial dataset called budget_data.csv. The dataset is composed of two columns: "Date" and "Profit/Losses".
+```bash
+python PyBank/main.py
+python PyPoll/main.py
+```
 
-Your task is to create a Python script that analyzes the records to calculate each of the following values:
+Each program prints its results in the terminal and saves the same report in its own `analysis` folder. The folder is created automatically if needed, and running the program again replaces the previous report.
 
-The total number of months included in the dataset
+Data and output paths are resolved relative to each script, so they do not depend on a specific username or computer.
 
-The net total amount of "Profit/Losses" over the entire period
+## PyBank: Financial Analysis
 
-The changes in "Profit/Losses" over the entire period, and then the average of those changes
+PyBank reads the `Date` and `Profit/Losses` columns from `budget_data.csv` and calculates:
 
-The greatest increase in profits (date and amount) over the entire period
+- Total number of monthly records.
+- Net total profit and loss.
+- Average change between consecutive monthly records.
+- Greatest increase and decrease, including their dates.
 
-The greatest decrease in profits (date and amount) over the entire period
+The average change uses the differences between consecutive records—not the average of the monthly profit and loss amounts. The input records must already be in chronological order.
 
-Your analysis should align with the following results:
+### Expected Results for the Provided Dataset
 
+```text
 Financial Analysis
 ----------------------------
 Total Months: 86
@@ -47,100 +65,81 @@ Total: $22564198
 Average Change: $-8311.11
 Greatest Increase in Profits: Aug-16 ($1862002)
 Greatest Decrease in Profits: Feb-14 ($-1825558)
-In addition, your final script should both print the analysis to the terminal and export a text file with the results.
+```
 
-PyPoll Instructions
-In this Challenge, you are tasked with helping a small, rural town modernize its vote-counting process.
+### Functions
 
-You will be given a set of poll data called election_data.csv. The dataset is composed of three columns: "Voter ID", "County", and "Candidate". Your task is to create a Python script that analyzes the votes and calculates each of the following values:
+| Function | Responsibility |
+| --- | --- |
+| `load_budget_data()` | Validate required columns and load financial records |
+| `analyze_budget_data()` | Calculate totals and changes between records |
+| `format_analysis()` | Build the financial report |
+| `write_analysis()` | Save the report to a text file |
+| `main()` | Coordinate the analysis workflow |
 
-The total number of votes cast
+Missing required columns and empty datasets raise descriptive errors. Profit and loss values must be integers. For a single record, the program reports zero for the change statistics because no consecutive-record comparison is available.
 
-A complete list of candidates who received votes
+## PyPoll: Election Analysis
 
-The percentage of votes each candidate won
+PyPoll reads the `Candidate` column from `election_data.csv`, treats each data row as one vote, and calculates:
 
-The total number of votes each candidate won
+- Total votes cast.
+- Votes received by each candidate.
+- Each candidate's percentage of the total.
+- The winner, or all tied winners.
 
-The winner of the election based on popular vote
+### Results for the Provided Dataset
 
-Your analysis should align with the following results:
-
+```text
 Election Results
--------------------------
+--------------------------
 Total Votes: 369711
--------------------------
+--------------------------
 Charles Casper Stockham: 23.049% (85213)
 Diana DeGette: 73.812% (272892)
 Raymon Anthony Doane: 3.139% (11606)
--------------------------
+--------------------------
 Winner: Diana DeGette
--------------------------
-In addition, your final script should both print the analysis to the terminal and export a text file with the results.
+--------------------------
+```
 
-Hints and Considerations
-Consider what you've learned so far. You've learned how to import modules like csv. You’ve learned how to read and write files in various formats. You’ve learned how to store content in variables, lists, and dictionaries. You’ve learned how to iterate through basic data structures. And you’ve learned how to debug along the way. Using all that you've learned, try to break down your tasks into discrete mini-objectives.
+### Functions
 
-The datasets for these Challenges are quite large. This was done purposefully to showcase one of the limits of Excel-based analysis. As data analysts, our first instinct is often to go straight to Excel, but creating scripts in Python can provide us with more powerful options for handling big data.
+| Function | Responsibility |
+| --- | --- |
+| `count_votes()` | Count total votes and votes per candidate |
+| `build_report()` | Calculate percentages and format election results |
+| `save_report()` | Save the report to a text file |
+| `main()` | Coordinate the analysis workflow |
 
-Write one script for each of the provided datasets. Run each script separately to make sure that the code works for its respective dataset.
+When no votes are found, the report states that no votes were found. When candidates tie for the highest count, the report lists them under `Tie`.
 
-Always commit your work and back it up with pushes to GitHub or GitLab. You don't want to lose hours of your hard work! Also make sure that your repo has a detailed README.md file.
+The program assumes the input contains a `Candidate` column and valid candidate names. It counts rows without checking for duplicate ballot identifiers.
 
-Requirements
-Correctly Reads in the CSV (10 points)
-Reads in the CSVs for both PyBank and PyPoll using Python (5 points)
+## Refactoring Improvements
 
-Successfully stores the header row (5 points)
+- Replaced hardcoded Windows paths with script-relative paths.
+- Organized each analysis into functions with focused responsibilities.
+- Used named CSV columns through `csv.DictReader`.
+- Created each report once for consistent terminal and file output.
+- Added automatic output-directory creation.
+- Used `if __name__ == "__main__":` guards so functions can be imported without running the full analysis.
 
-Results Printed out to correctly to terminal (40 points)
-Results correctly display for PyBank:
+## Validation
 
-Total Months (5 points)
+The PyPoll script was run against the provided election dataset. Its terminal and saved reports matched, showing 369,711 votes and Diana DeGette as the winner with 73.812%.
 
-Total (5 points)
+Git whitespace checks passed before the PyPoll refactor was committed.
 
-Average Change (5 points)
+The PyBank results above are the expected values provided in the original assignment. To check both programs locally, run:
 
-Greatest Increase (5 points)
+```bash
+python PyBank/main.py
+python PyPoll/main.py
+```
 
-Greatest Decrease (5 points)
+Compare the terminal output with each generated `analysis/analysis.txt` file and the results shown above.
 
-Results correctly display for PyPoll:
+## Assignment Background
 
-Total Votes (5 points)
-
-Each candidate’s total votes and percent of votes (5 points)
-
-Winner (5 points)
-
-Code Runs Error Free (10 points)
-Error Free (5 points)
-
-Producing consistent results (5 points)
-
-Exports results to text file (30 points)
-The text file contains for PyBank:
-
-Total Months (2.5 points)
-
-Total (2.5 points)
-
-Average Change (5 points)
-
-Greatest Increase (5 points)
-
-Greatest Decrease (5 points)
-
-The text file contains for Pypoll:
-
-Total Votes (2.5 points)
-
-Each candidate’s total votes and percent of votes (2.5 points)
-
-Winner (5 points)
-
-Code is cleaned and commented (10 points)
-Has additional tests and debugging removed (5 points)
-
-Commented (5 points)
+The datasets and original requirements came from the OSU Data Analytics Bootcamp Module 3 Python Challenge. The original instructions are preserved in [docs/assignment.md](docs/assignment.md).
