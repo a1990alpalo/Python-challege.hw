@@ -29,8 +29,8 @@ Both programs use only the Python standard library. No third-party packages are 
 Clone the repository and enter its directory:
 
 ```bash
-git clone https://github.com/a1990alpalo/Python-challege.hw.git
-cd Python-challege.hw
+git clone https://github.com/a1990alpalo/Python-challenge.hw.git
+cd Python-challenge.hw
 ```
 
 Run each program from the repository root:
